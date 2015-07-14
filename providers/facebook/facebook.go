@@ -16,10 +16,12 @@ import (
 )
 
 const (
-	authURL         string = "https://www.facebook.com/dialog/oauth"
-	tokenURL        string = "https://graph.facebook.com/oauth/access_token"
-	endpointProfile string = "https://graph.facebook.com/me?fields=email,first_name,last_name,link,bio,id,name,picture,location"
+	authURL              string = "https://www.facebook.com/dialog/oauth"
+	tokenURL             string = "https://graph.facebook.com/oauth/access_token"
+	endpointProfileConst string = "https://graph.facebook.com/me?fields=email,first_name,last_name,link,bio,id,name,picture,location"
 )
+
+var endpointProfile = endpointProfileConst
 
 // New creates a new Facebook provider, and sets up important connection details.
 // You should always call `facebook.New` to get a new Provider. Never try to create
@@ -32,6 +34,14 @@ func New(clientKey, secret, callbackURL string, scopes ...string) *Provider {
 	}
 	p.config = newConfig(p, scopes)
 	return p
+}
+
+func AddFieldsEndPoint(fields []string) {
+	endpointProfile = endpointProfileConst
+
+	s := strings.Join(fields, ",")
+
+	endpointProfile = strings.Join([]string{endpointProfile, s}, ",")
 }
 
 // Provider is the implementation of `goth.Provider` for accessing Facebook.
